@@ -1,23 +1,22 @@
 import telebot
 
-# Replace 'YOUR_BOT_TOKEN' with your actual bot token obtained from the BotFather
-bot = telebot.TeleBot('6101196560:AAE9Te6XfIfldcJcqdnh6Yb7SHPVi_z3hRc')
+# Replace 'TOKEN' with your bot token
+bot_token = '6101196560:AAE9Te6XfIfldcJcqdnh6Yb7SHPVi_z3hRc'
 
-# Replace 'LOG_GROUP_ID' with the ID of the log group where you want to save the conversations
+# Replace 'GROUP_ID' with the ID of the group where the bot will save the chats
 log_group_id = '-1001832126466'
 
+# Create a TeleBot instance
+bot = telebot.TeleBot(bot_token)
+
+# Register a message handler for all incoming messages in any group
 @bot.message_handler(func=lambda message: True)
 def save_chat(message):
     chat_id = message.chat.id
-    chat_type = message.chat.type
+    chat_message = f"{message.from_user.username}: {message.text}"
 
-    # Check if the message is from a group
-    if chat_type == 'group' or chat_type == 'supergroup':
-        # Format the chat message in 'question: answer' format
-        chat_message = f"{message.text}: {message.reply_to_message.text}"
+    # Send the formatted chat message to the log group
+    bot.send_message(log_group_id, chat_message)
 
-        # Send the formatted chat message to the log group
-        bot.send_message(log_group_id, chat_message)
-
-# Run the bot
+# Start the bot
 bot.polling()
